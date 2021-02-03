@@ -33,7 +33,7 @@ describe('restaurants', () => {
         applyMiddleware(thunk.withExtraArgument(api)),
       );
       // .withExtraArgument()
-      // llows you to pass an additional argument at setup time that
+      // allows you to pass an additional argument at setup time that
       // will be available to all thunk functions. This allows us to
       // inject our API.
 
@@ -53,3 +53,5 @@ actions that loadRestaurants dispatches are set up. Our tests would continue to
 pass as long as the action type and state stayed the same, which is fittingly 
 exactly the contract that the rest of our application relies on as well.
 */
+
+// https://outsidein.dev/react/3-vertical-slice.html#unit-testing-the-store
