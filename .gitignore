@@ -6,7 +6,8 @@
 .pnp.js
 
 # testing
-/coverage
+/coverag
+cypress.env.json
 
 # production
 /build

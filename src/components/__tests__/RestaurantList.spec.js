@@ -15,6 +15,7 @@ describe('RestaurantList', () => {
     // we dont want to connect to our real Redux store
     // so we create a mock function - loadRestaurants
     loadRestaurants = jest.fn().mockName('loadRestaurants');
+
     context = render(
       <RestaurantList
         loadRestaurants={loadRestaurants}

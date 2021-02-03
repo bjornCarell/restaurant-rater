@@ -1,4 +1,4 @@
-const API_KEY = process.env.REACT_APP_API_KEY;
+const API_KEY = Cypress.env('API_KEY');
 
 describe('Listing Restaurants', () => {
   it('shows restaurants from the server', () => {
@@ -13,6 +13,7 @@ describe('Listing Restaurants', () => {
     // cy.route lets us stub a specific request, GET/POST/PUT, to the backend
     cy.route({
       method: 'GET',
+      // url: `https://outside-in-dev-api.herokuapp.com/${API_KEY}/restaurants`,
       url: `https://outside-in-dev-api.herokuapp.com/${API_KEY}/restaurants`,
       response: [
         {id: 1, name: sushiPlace},
