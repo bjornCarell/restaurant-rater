@@ -6,6 +6,7 @@ import {loadRestaurants} from '../restaurants/actions';
 describe('restaurants', () => {
   describe('loadRestaurants action', () => {
     it('stores the restaurants', async () => {
+      // hard coded records
       const records = [
         {id: 1, name: 'Sushi Place'},
         {id: 2, name: 'Pizza Place'},
