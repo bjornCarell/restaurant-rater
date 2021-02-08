@@ -12,10 +12,14 @@ describe('RestaurantList', () => {
   let context;
 
   beforeEach(() => {
-    // we dont want to connect to our real Redux store
+    // we don't want to connect to our real Redux store
     // so we create a mock function - loadRestaurants
+    // that is passed in the way Redux dispatch function is
+    // then we can run expectations on those mock functions
     loadRestaurants = jest.fn().mockName('loadRestaurants');
 
+    // render the Component and pass props to it as we would
+    // do in produciont code
     context = render(
       <RestaurantList
         loadRestaurants={loadRestaurants}
@@ -23,14 +27,29 @@ describe('RestaurantList', () => {
       />,
     );
   });
+  // Although not all of these variables are needed for both tests, it's okay
+  // to set them up for both. This sets up a component in a good default state,
+  // so each test can stay focused on what it wants to assert.
 
   it('loads restaurants on first render', () => {
+    // loadRestaurants passed to props and called inside useEffect
     expect(loadRestaurants).toHaveBeenCalled();
   });
 
   it('displays the restaurants', () => {
     const {queryByText} = context;
+    // queryByText finds an element containing the passed-in text.
+    // If found, queryByText returns a reference to the element;
+    // if not found, it returns null
     expect(queryByText('Sushi Place')).not.toBeNull();
     expect(queryByText('Pizza Place')).not.toBeNull();
   });
 });
+
+// Why two it blocks?
+// There is a common testing principle to check one behavior per
+// test in unit tests. In our first test we checked the loading
+// behavior, and in this test we are checking the
+// restaurant-display behavior - "run one expectation per test"
+
+// In the TDD cycle, whenever the tests go green, look for opportunities to refactor,
