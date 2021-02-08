@@ -5,41 +5,64 @@ import {loadRestaurants} from '../restaurants/actions';
 
 describe('restaurants', () => {
   describe('loadRestaurants action', () => {
-    it('stores the restaurants', async () => {
-      // hard coded records
-      const records = [
-        {id: 1, name: 'Sushi Place'},
-        {id: 2, name: 'Pizza Place'},
-      ];
-
-      // ...we won't make an HTTP request directly in our Redux store.
-      // Instead, we'll delegate to an API object that we pass in.
-      // giving it a loadRestaurants method.
+    describe('while loading', () => {
+      // the stubbed API
+      // the function passed to the promise never calls its arguments
+      // so the promise never resolves or rejects, this is ok since
+      // what we want to test is what happens before the promise resolves
       const api = {
-        loadRestaurants: () => Promise.resolve(records),
+        loadRestaurants: () => new Promise(() => {}),
       };
-      // We are stubbing out the API here in the test, so we just
-      // implement that method to return a Promise that resolves to
-      // our hard-coded records.
 
-      const initialState = {
-        records: [],
-      };
-      // We'll use a real Redux store to run our tests through. That
-      // way we are testing our thunks, action creators, and reducers
-      // in integration
+      const initialState = {};
+
       const store = createStore(
         restaurantsReducer,
         initialState,
         applyMiddleware(thunk.withExtraArgument(api)),
       );
-      // .withExtraArgument()
-      // allows you to pass an additional argument at setup time that
-      // will be available to all thunk functions. This allows us to
-      // inject our API.
 
-      await store.dispatch(loadRestaurants());
-      expect(store.getState().records).toEqual(records);
+      store.dispatch(loadRestaurants);
+      expect(store.getState().loading).toEqual(true);
+    });
+
+    describe('when loading succeeds', () => {
+      it('stores the restaurants', async () => {
+        // hard coded records
+        const records = [
+          {id: 1, name: 'Sushi Place'},
+          {id: 2, name: 'Pizza Place'},
+        ];
+
+        // ...we won't make an HTTP request directly in our Redux store.
+        // Instead, we'll delegate to an API object that we pass in.
+        // giving it a loadRestaurants method.
+        const api = {
+          loadRestaurants: () => Promise.resolve(records),
+        };
+        // We are stubbing out the API here in the test, so we just
+        // implement that method to return a Promise that resolves to
+        // our hard-coded records.
+
+        const initialState = {
+          records: [],
+        };
+        // We'll use a real Redux store to run our tests through. That
+        // way we are testing our thunks, action creators, and reducers
+        // in integration
+        const store = createStore(
+          restaurantsReducer,
+          initialState,
+          applyMiddleware(thunk.withExtraArgument(api)),
+        );
+        // .withExtraArgument()
+        // allows you to pass an additional argument at setup time that
+        // will be available to all thunk functions. This allows us to
+        // inject our API.
+
+        await store.dispatch(loadRestaurants());
+        expect(store.getState().records).toEqual(records);
+      });
     });
   });
 });

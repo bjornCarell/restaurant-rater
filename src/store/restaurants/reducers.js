@@ -16,6 +16,9 @@ const records = (state = [], action) => {
   }
 };
 
+const loading = () => true;
+
 export default combineReducers({
   records,
+  loading,
 });
