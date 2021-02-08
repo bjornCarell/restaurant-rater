@@ -27,13 +27,15 @@ describe('restaurants', () => {
     });
 
     describe('when loading succeeds', () => {
-      it('stores the restaurants', async () => {
-        // hard coded records
-        const records = [
-          {id: 1, name: 'Sushi Place'},
-          {id: 2, name: 'Pizza Place'},
-        ];
+      // hard coded records
+      const records = [
+        {id: 1, name: 'Sushi Place'},
+        {id: 2, name: 'Pizza Place'},
+      ];
 
+      let store;
+
+      beforeEach(() => {
         // ...we won't make an HTTP request directly in our Redux store.
         // Instead, we'll delegate to an API object that we pass in.
         // giving it a loadRestaurants method.
@@ -50,7 +52,7 @@ describe('restaurants', () => {
         // We'll use a real Redux store to run our tests through. That
         // way we are testing our thunks, action creators, and reducers
         // in integration
-        const store = createStore(
+        store = createStore(
           restaurantsReducer,
           initialState,
           applyMiddleware(thunk.withExtraArgument(api)),
@@ -60,7 +62,10 @@ describe('restaurants', () => {
         // will be available to all thunk functions. This allows us to
         // inject our API.
 
-        await store.dispatch(loadRestaurants());
+        return store.dispatch(loadRestaurants());
+      });
+
+      it('stores the restaurants', () => {
         expect(store.getState().records).toEqual(records);
       });
     });
