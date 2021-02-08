@@ -5,15 +5,17 @@ import {loadRestaurants} from '../restaurants/actions';
 
 describe('restaurants', () => {
   describe('initially', () => {
-    const initialState = {};
+    it('does not have the loading flag set', () => {
+      const initialState = {};
 
-    const store = createStore(
-      restaurantsReducer,
-      initialState,
-      applyMiddleware(thunk),
-    );
+      const store = createStore(
+        restaurantsReducer,
+        initialState,
+        applyMiddleware(thunk),
+      );
 
-    expect(store.getState().loading).toEqual(false);
+      expect(store.getState().loading).toEqual(false);
+    });
   });
 
   describe('loadRestaurants action', () => {
@@ -34,7 +36,7 @@ describe('restaurants', () => {
         applyMiddleware(thunk.withExtraArgument(api)),
       );
 
-      store.dispatch(loadRestaurants);
+      store.dispatch(loadRestaurants());
       expect(store.getState().loading).toEqual(true);
     });
 
