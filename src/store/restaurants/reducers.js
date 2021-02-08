@@ -16,7 +16,14 @@ const records = (state = [], action) => {
   }
 };
 
-const loading = () => true;
+const loading = (state = true, action) => {
+  switch (action.type) {
+    case STORE_RESTAURANTS:
+      return false;
+    default:
+      return state;
+  }
+};
 
 export default combineReducers({
   records,
