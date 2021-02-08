@@ -53,6 +53,12 @@ describe('RestaurantList', () => {
     const {queryByTestId} = context;
     expect(queryByTestId('loading-indicator')).not.toBeNull();
   });
+
+  it('does not display the loading indictor while not loading', () => {
+    renderWithProps({loading: false});
+    const {queryByTestId} = context;
+    expect(queryByTestId('loading-indicator')).toBeNull();
+  });
 });
 
 // Why two it blocks?
