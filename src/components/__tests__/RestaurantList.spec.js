@@ -11,32 +11,35 @@ describe('RestaurantList', () => {
   let loadRestaurants;
   let context;
 
-  beforeEach(() => {
+  const renderWithProps = (propsOverrides = {}) => {
+    const props = {
+      loadRestaurants: jest.fn().mockName('loadRestaurants'),
+      restaurants,
+      ...propsOverrides,
+    };
     // we don't want to connect to our real Redux store
     // so we create a mock function - loadRestaurants
     // that is passed in the way Redux dispatch function is
     // then we can run expectations on those mock functions
-    loadRestaurants = jest.fn().mockName('loadRestaurants');
+    loadRestaurants = props.loadRestaurants;
 
     // render the Component and pass props to it as we would
     // do in produciont code
-    context = render(
-      <RestaurantList
-        loadRestaurants={loadRestaurants}
-        restaurants={restaurants}
-      />,
-    );
-  });
+    context = render(<RestaurantList {...props} />);
+  };
+
   // Although not all of these variables are needed for both tests, it's okay
   // to set them up for both. This sets up a component in a good default state,
   // so each test can stay focused on what it wants to assert.
 
   it('loads restaurants on first render', () => {
+    renderWithProps();
     // loadRestaurants passed to props and called inside useEffect
     expect(loadRestaurants).toHaveBeenCalled();
   });
 
   it('displays the restaurants', () => {
+    renderWithProps();
     const {queryByText} = context;
     // queryByText finds an element containing the passed-in text.
     // If found, queryByText returns a reference to the element;
