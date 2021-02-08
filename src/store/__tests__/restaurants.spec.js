@@ -4,6 +4,18 @@ import restaurantsReducer from '../restaurants/reducers';
 import {loadRestaurants} from '../restaurants/actions';
 
 describe('restaurants', () => {
+  describe('initially', () => {
+    const initialState = {};
+
+    const store = createStore(
+      restaurantsReducer,
+      initialState,
+      applyMiddleware(thunk),
+    );
+
+    expect(store.getState().loading).toEqual(false);
+  });
+
   describe('loadRestaurants action', () => {
     describe('while loading', () => {
       // the stubbed API

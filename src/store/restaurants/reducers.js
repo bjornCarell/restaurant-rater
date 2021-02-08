@@ -16,7 +16,7 @@ const records = (state = [], action) => {
   }
 };
 
-const loading = (state = true, action) => {
+const loading = (state = false, action) => {
   switch (action.type) {
     case STORE_RESTAURANTS:
       return false;
