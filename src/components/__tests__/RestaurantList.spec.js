@@ -14,6 +14,7 @@ describe('RestaurantList', () => {
   const renderWithProps = (propsOverrides = {}) => {
     const props = {
       loadRestaurants: jest.fn().mockName('loadRestaurants'),
+      loading: false,
       restaurants,
       ...propsOverrides,
     };
@@ -45,14 +46,16 @@ describe('RestaurantList', () => {
   });
 
   describe('when loading succeeds', () => {
+    beforeEach(() => {
+      renderWithProps();
+    });
+
     it('does not display the loading indictor while not loading', () => {
-      renderWithProps({loading: false});
       const {queryByTestId} = context;
       expect(queryByTestId('loading-indicator')).toBeNull();
     });
 
     it('displays the restaurants', () => {
-      renderWithProps();
       const {queryByText} = context;
       // queryByText finds an element containing the passed-in text.
       // If found, queryByText returns a reference to the element;
