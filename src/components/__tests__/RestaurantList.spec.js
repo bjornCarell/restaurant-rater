@@ -38,26 +38,28 @@ describe('RestaurantList', () => {
     expect(loadRestaurants).toHaveBeenCalled();
   });
 
-  it('displays the restaurants', () => {
-    renderWithProps();
-    const {queryByText} = context;
-    // queryByText finds an element containing the passed-in text.
-    // If found, queryByText returns a reference to the element;
-    // if not found, it returns null
-    expect(queryByText('Sushi Place')).not.toBeNull();
-    expect(queryByText('Pizza Place')).not.toBeNull();
-  });
-
   it('displays the loading indicator while loading', () => {
     renderWithProps({loading: true});
     const {queryByTestId} = context;
     expect(queryByTestId('loading-indicator')).not.toBeNull();
   });
 
-  it('does not display the loading indictor while not loading', () => {
-    renderWithProps({loading: false});
-    const {queryByTestId} = context;
-    expect(queryByTestId('loading-indicator')).toBeNull();
+  describe('when loading succeeds', () => {
+    it('does not display the loading indictor while not loading', () => {
+      renderWithProps({loading: false});
+      const {queryByTestId} = context;
+      expect(queryByTestId('loading-indicator')).toBeNull();
+    });
+
+    it('displays the restaurants', () => {
+      renderWithProps();
+      const {queryByText} = context;
+      // queryByText finds an element containing the passed-in text.
+      // If found, queryByText returns a reference to the element;
+      // if not found, it returns null
+      expect(queryByText('Sushi Place')).not.toBeNull();
+      expect(queryByText('Pizza Place')).not.toBeNull();
+    });
   });
 });
 
