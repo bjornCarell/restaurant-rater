@@ -1,5 +1,5 @@
 import React from 'react';
-import {render} from '@testing-library/react';
+import {queryByText, render} from '@testing-library/react';
 import {RestaurantList} from '../RestaurantList';
 
 describe('RestaurantList', () => {
@@ -62,6 +62,22 @@ describe('RestaurantList', () => {
       // if not found, it returns null
       expect(queryByText('Sushi Place')).not.toBeNull();
       expect(queryByText('Pizza Place')).not.toBeNull();
+    });
+
+    it('does not display the error message', () => {
+      const {queryByText} = context;
+      expect(queryByText('Restaurants could not be loaded.')).toBeNull();
+    });
+  });
+
+  describe('when loading fails', () => {
+    beforeEach(() => {
+      renderWithProps({loadError: true});
+    });
+
+    it('displays the error message', () => {
+      const {queryByText} = context;
+      expect(queryByText('Restaurants could not be loaded.')).not.toBeNull();
     });
   });
 });

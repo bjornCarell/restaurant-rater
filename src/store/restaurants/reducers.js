@@ -27,7 +27,15 @@ const loading = (state = false, action) => {
   }
 };
 
+const loadError = (state = true, action) => {
+  switch (action.type) {
+    default:
+      return state;
+  }
+};
+
 export default combineReducers({
   records,
   loading,
+  loadError,
 });
