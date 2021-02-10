@@ -7,7 +7,6 @@ export const loadRestaurants = () => (dispatch, getState, api) => {
   api
     .loadRestaurants()
     .then(records => {
-      console.log(records);
       dispatch(storeRestaurants(records));
     })
     .catch(() => dispatch(recordLoadingError()));

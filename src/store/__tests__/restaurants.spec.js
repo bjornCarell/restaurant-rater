@@ -28,24 +28,35 @@ describe('restaurants', () => {
 
   describe('loadRestaurants action', () => {
     describe('while loading', () => {
-      // the stubbed API
-      // the function passed to the promise never calls its arguments
-      // so the promise never resolves or rejects, this is ok since
-      // what we want to test is what happens before the promise resolves
-      const api = {
-        loadRestaurants: () => new Promise(() => {}),
-      };
+      let store;
 
-      const initialState = {};
+      beforeEach(() => {
+        // the stubbed API
+        // the function passed to the promise never calls its arguments
+        // so the promise never resolves or rejects, this is ok since
+        // what we want to test is what happens before the promise resolves
+        const api = {
+          loadRestaurants: () => new Promise(() => {}),
+        };
 
-      const store = createStore(
-        restaurantsReducer,
-        initialState,
-        applyMiddleware(thunk.withExtraArgument(api)),
-      );
+        const initialState = {loadError: true};
 
-      store.dispatch(loadRestaurants());
-      expect(store.getState().loading).toEqual(true);
+        store = createStore(
+          restaurantsReducer,
+          initialState,
+          applyMiddleware(thunk.withExtraArgument(api)),
+        );
+
+        return store.dispatch(loadRestaurants());
+      });
+
+      it('sets a loading flag', () => {
+        expect(store.getState().loading).toEqual(true);
+      });
+
+      it('clears the error flag', () => {
+        expect(store.getState().loadError).toEqual(false);
+      });
     });
 
     describe('when loading succeeds', () => {
@@ -117,6 +128,10 @@ describe('restaurants', () => {
 
       it('sets an error flag', () => {
         expect(store.getState().loadError).toEqual(true);
+      });
+
+      it('clears the loading flag', () => {
+        expect(store.getState().loading).toEqual(false);
       });
     });
   });
