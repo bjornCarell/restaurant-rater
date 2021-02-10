@@ -1,5 +1,9 @@
 import {combineReducers} from 'redux';
-import {STORE_RESTAURANTS} from './actions';
+import {
+  START_LOADING,
+  STORE_RESTAURANTS,
+  RECORD_LOADING_ERROR,
+} from './actions';
 
 // in redux we must follow the design state = []
 // otherwise we get: Reducer "records" returned undefined during initialization.
@@ -16,6 +20,32 @@ const records = (state = [], action) => {
   }
 };
 
+const loading = (state = false, action) => {
+  switch (action.type) {
+    case START_LOADING:
+      return true;
+    case STORE_RESTAURANTS:
+      return false;
+    case RECORD_LOADING_ERROR:
+      return false;
+    default:
+      return state;
+  }
+};
+
+const loadError = (state = false, action) => {
+  switch (action.type) {
+    case START_LOADING:
+      return false;
+    case RECORD_LOADING_ERROR:
+      return true;
+    default:
+      return state;
+  }
+};
+
 export default combineReducers({
   records,
+  loading,
+  loadError,
 });

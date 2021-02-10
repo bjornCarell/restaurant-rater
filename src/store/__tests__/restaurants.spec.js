@@ -4,42 +4,135 @@ import restaurantsReducer from '../restaurants/reducers';
 import {loadRestaurants} from '../restaurants/actions';
 
 describe('restaurants', () => {
+  describe('initially', () => {
+    let store;
+
+    beforeEach(() => {
+      const initialState = {};
+
+      store = createStore(
+        restaurantsReducer,
+        initialState,
+        applyMiddleware(thunk),
+      );
+    });
+
+    it('does not have the loading flag set', () => {
+      expect(store.getState().loading).toEqual(false);
+    });
+
+    it('does not set an error flag', () => {
+      expect(store.getState().loadError).toEqual(false);
+    });
+  });
+
   describe('loadRestaurants action', () => {
-    it('stores the restaurants', async () => {
+    describe('while loading', () => {
+      let store;
+
+      beforeEach(() => {
+        // the stubbed API
+        // the function passed to the promise never calls its arguments
+        // so the promise never resolves or rejects, this is ok since
+        // what we want to test is what happens before the promise resolves
+        const api = {
+          loadRestaurants: () => new Promise(() => {}),
+        };
+
+        const initialState = {loadError: true};
+
+        store = createStore(
+          restaurantsReducer,
+          initialState,
+          applyMiddleware(thunk.withExtraArgument(api)),
+        );
+
+        return store.dispatch(loadRestaurants());
+      });
+
+      it('sets a loading flag', () => {
+        expect(store.getState().loading).toEqual(true);
+      });
+
+      it('clears the error flag', () => {
+        expect(store.getState().loadError).toEqual(false);
+      });
+    });
+
+    describe('when loading succeeds', () => {
       // hard coded records
       const records = [
         {id: 1, name: 'Sushi Place'},
         {id: 2, name: 'Pizza Place'},
       ];
 
-      // ...we won't make an HTTP request directly in our Redux store.
-      // Instead, we'll delegate to an API object that we pass in.
-      // giving it a loadRestaurants method.
-      const api = {
-        loadRestaurants: () => Promise.resolve(records),
-      };
-      // We are stubbing out the API here in the test, so we just
-      // implement that method to return a Promise that resolves to
-      // our hard-coded records.
+      let store;
 
-      const initialState = {
-        records: [],
-      };
-      // We'll use a real Redux store to run our tests through. That
-      // way we are testing our thunks, action creators, and reducers
-      // in integration
-      const store = createStore(
-        restaurantsReducer,
-        initialState,
-        applyMiddleware(thunk.withExtraArgument(api)),
-      );
-      // .withExtraArgument()
-      // allows you to pass an additional argument at setup time that
-      // will be available to all thunk functions. This allows us to
-      // inject our API.
+      beforeEach(() => {
+        // ...we won't make an HTTP request directly in our Redux store.
+        // Instead, we'll delegate to an API object that we pass in.
+        // giving it a loadRestaurants method.
+        const api = {
+          loadRestaurants: () => Promise.resolve(records),
+        };
+        // We are stubbing out the API here in the test, so we just
+        // implement that method to return a Promise that resolves to
+        // our hard-coded records.
 
-      await store.dispatch(loadRestaurants());
-      expect(store.getState().records).toEqual(records);
+        const initialState = {
+          records: [],
+        };
+        // We'll use a real Redux store to run our tests through. That
+        // way we are testing our thunks, action creators, and reducers
+        // in integration
+        store = createStore(
+          restaurantsReducer,
+          initialState,
+          applyMiddleware(thunk.withExtraArgument(api)),
+        );
+        // .withExtraArgument()
+        // allows you to pass an additional argument at setup time that
+        // will be available to all thunk functions. This allows us to
+        // inject our API.
+
+        return store.dispatch(loadRestaurants());
+      });
+
+      it('stores the restaurants', () => {
+        expect(store.getState().records).toEqual(records);
+      });
+
+      it('clears the loading flag', () => {
+        expect(store.getState().loading).toEqual(false);
+      });
+    });
+
+    describe('when loading fails', () => {
+      let store;
+
+      beforeEach(() => {
+        const api = {
+          loadRestaurants: () => Promise.reject(),
+        };
+
+        const initialState = {};
+
+        store = createStore(
+          restaurantsReducer,
+          initialState,
+          applyMiddleware(thunk.withExtraArgument(api)),
+        );
+
+        return store.dispatch(loadRestaurants());
+      });
+
+      it('sets an error flag', () => {
+        expect(store.getState().loadError).toEqual(true);
+      });
+
+      it('clears the loading flag', () => {
+        expect(store.getState().loading).toEqual(false);
+      });
     });
   });
 });
